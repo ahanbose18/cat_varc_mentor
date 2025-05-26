@@ -1,0 +1,7 @@
+streamlit
+requests
+openai
+chromadb
+sentence-transformers
+tqdm
+logging
