@@ -27,15 +27,24 @@ def initialize_openai_client():
 
 
 
-def generate_rc_passage(topic, difficulty='Moderate',passage_length = '400'):
+def generate_rc_passage(topic,fk_scale ,passage_length ):
     try:
         client = initialize_openai_client()
         prompt = (
-            f"You are a CAT exam content generator. Generate a {difficulty.lower()} difficulty, {passage_length}-word reading comprehension passage "
-            f"on the topic '{topic}'. The tone can be neutral, argumentative or exploratory or anything else. Follow the passage with 5 Questions including but not limited to: Tone, Inference, Main Idea. Also include questions on Specific Detail, Logical Reasoning. Give 4 answer choices for each question. Format:\n\nPassage:\n<text>\n\nQuestions:\n1. <question> \nA <Option> \nB <Option> \nC <Option> \nD <Option> \n2. <question> \nA <Option> \nB <Option> \nC <Option> \nD <Option>\n3. <question> \nA <Option> \nB <Option> \nC <Option> \nD <Option>\n4. <question> \nA <Option> \nB <Option> \nC <Option> \nD <Option>\n5. <question> \nA <Option> \nB <Option> \nC <Option> \nD <Option>.\n\n"
-            f"After each question, provide the correct answer in the format: Answer: [A/B/C/D]"
+            f"You are a CAT exam content generator. Generate a  {passage_length}- word long reading comprehension passage. The  Flesch-Kincaid Grade Level should be around {fk_scale}."
+            f"on the topic '{topic}'.The passage should be coherent, engaging, and suitable for CAT exam standards. It should include a variety of sentence structures and vocabulary.It should have paragraphs.  The tone can be neutral, argumentative or exploratory or anything else. Follow the passage with 5 Questions including but not limited to: Tone, Inference, Main Idea. Also include questions on Specific Detail, Logical Reasoning.Can we also include questions on Logical Reasoning, such as: Which of the following is a valid inference based on the passage? or What is the author's primary argument? or What is the main idea of the passage? or What is the author's perspective on the topic discussed in the passage? or What is the author's stance on the issue presented in the passage? or What is the author's viewpoint on the subject matter discussed in the passage? or What is the author's position on the topic addressed in the passage? or What is the author's opinion on the matter discussed in the passage? or What is the author's take on the issue presented in the passage?"
+            f" Give 4 answer choices for each question. Format:\n\nPassage:\n<text>\n\nQuestions:\n1. <question> \nA <Option> \nB <Option> \nC <Option> \nD <Option> \n2. <question> \nA <Option> \nB <Option> \nC <Option> \nD <Option>\n3. <question> \nA <Option> \nB <Option> \nC <Option> \nD <Option>\n4. <question> \nA <Option> \nB <Option> \nC <Option> \nD <Option>\n5. <question> \nA <Option> \nB <Option> \nC <Option> \nD <Option>.\n\n"
+             f"Also, include questions on Specific Detail, such as: What is the main point of the passage? or What is the author's primary argument? or What is the author's perspective on the topic discussed in the passage? or What is the author's stance on the issue presented in the passage? or What is the author's viewpoint on the subject matter discussed in the passage? or What is the author's position on the topic addressed in the passage? or What is the author's opinion on the matter discussed in the passage? or What is the author's take on the issue presented in the passage?\n\n"
+            f"For HARD difficulty, ensure the questions are more analytical and require deeper understanding of the passage.\n\n"
+            f"For HARD difficulty, ensure the answers are not obvious and require critical thinking.\n\n"
+            f"Do not repeat the same question or answer options in the passage.\n\n"
+            f"Do not repeat the passage or questions in the passage.\n\n"
+            f"Ensure the passage is coherent, engaging, and suitable for CAT exam standards.\n\n"
             f"Include explanations in depth around 10 to 12 lines as well for each question in the format: Explanation: <explanation>.\n\n"
             f"Ensure the passage is coherent, engaging, and suitable for CAT exam standards. Do not include any answers in the passage itself, only in the answer section.\n\n"
+            f"Do Not repeat the same passage again and again\n\n"
+            f"After each question, provide the correct answer in the format: Answer: [A/B/C/D]"
+           
                                                                                                           
         )
 

@@ -4,51 +4,26 @@ from evaluator import evaluate_user_answers
 from datetime import datetime
 import time
 
-st.markdown(
-    """
-    <style>
-    .stApp {
-        background-color: #FFF2EB;  /* Light beige background */
-    }
-
-    .stHeading > h1 {
-        color: #096B68;  /* Dark teal */
-        font-family: 'Arial', sans-serif;
-        font-weight: bold; 
-        font-size: 36px; 
-        text-align: center;
-        margin-top: 20px;
-        margin-bottom: 10px;
-    }
-
-    .stButton > button {
-        background-color: #4E71FF !important;  /* Indigo */
-        color: #FFFFFF !important;
-        border-radius: 12px !important;
-        padding: 10px 20px !important;
-        font-weight: bold !important;
-        font-size: 16px !important;
-        border: none !important;
-    }
-
-    /* Button hover effect */
-    .stButton > button:hover {
-        background-color: #BBFBFF !important;  /* Lighter indigo */
-        color: #096B68 !important;
-    }
-    </style>
-    """,
-    unsafe_allow_html=True
-)
 
 st.title("AI-Powered Reading Comprehension Passage Generator")
 st.subheader("Generate CAT-style RC Passages with Questions")
+# Google Form URL
+form_url = "https://docs.google.com/forms/d/e/1FAIpQLSd893LWEpBFtkHun6m19U2djFrkUM-N0CkIGh-pcghHgE4ZbA/viewform?usp=sharing&ouid=113708083278017820025"
+
+# Display the hyperlink
+st.write(f'<a href="{form_url}" target="_blank">Please share your feedback here</a>', unsafe_allow_html=True)
 topic = st.text_input("Enter a topic (e.g., Globalization, AI, Ethics)")
 difficulty = st.selectbox("Choose difficulty", ["Easy", "Moderate", "Hard"])
+if difficulty == "Easy":
+    fk_scale = "4-6"
+elif difficulty == "Moderate":
+    fk_scale = "7-9"
+else:
+    fk_scale = "10-12"
 passage_length = st.selectbox("Choose Passage Length", ["200","500","900"])
-
+st.write("Developed by [Ahan Bose]. Reach out to me on [LinkedIn](https://www.linkedin.com/in/ahan-bose-spjimr/)")
 if st.button("Generate RC", key="generate_rc_button"):
-    output = generate_rc_passage(topic, difficulty, passage_length)
+    output = generate_rc_passage(topic, fk_scale, passage_length)
     st.session_state.generated_output = output
     #st.text_area("RC Passage + Questions", output, height=500)
     # Remove answer lines from display version
@@ -71,13 +46,13 @@ if 'generated_output' in st.session_state:
     if 'start_time' in st.session_state and st.session_state.get('timer_running', False):
         elapsed = datetime.now() - st.session_state.start_time
         minutes, seconds = divmod(elapsed.total_seconds(), 60)
-        st.markdown(f"⏱️ **Time Elapsed:** {int(minutes)} minutes {int(seconds)} seconds")
-
-        # # Trigger a rerun every second
-        # time.sleep(1)
-        # st.rerun()
-
-    if st.button("Reveal Answer", key="reveal_answer_button"):
+    st.subheader("Evaluate Your Answers")
+    answers = [st.selectbox(f"Your Answer for Q{i}:", ["A", "B", "C", "D"], key=f"q{i}") for i in range(1, 6)]
+    
+    if st.button("Evaluate"):
+        results = evaluate_user_answers(st.session_state.generated_output, answers)
+        for res in results:
+            st.write(res)
         st.session_state.timer_running = False
         
         end_time = datetime.now()
@@ -90,12 +65,11 @@ if 'generated_output' in st.session_state:
                 st.write(f"Q{i+1}: {line.split(':')[1].strip()}")
         else:
             st.warning("Generate a passage first.")
-        time.sleep(10)
+        time.sleep(5)
+
     if st.button("Reveal Explaination", key="reveal_explaination_button"):
         st.markdown("### 📌Explaination")
-        # explanations = explain_answers(st.session_state.generated_output)
-        # for exp in explanations:
-        #     st.write(exp)
+    
         for i, line in enumerate(st.session_state.generated_output.split("\n")):
             if line.strip().startswith("Explanation:"):
                 st.write(f"Q{i+1}: {line.split(':')[1].strip()}")
@@ -103,11 +77,6 @@ if 'generated_output' in st.session_state:
             st.warning("Generate a passage first.")
         exit()
 
-    #st.markdown(f"⏱️ **Time Elapsed:** {int(minutes)} minutes {int(seconds)} seconds")
-
-      
-    #Trigger a rerun every second
-    time.sleep(1)
-    st.rerun()
+   
 else:
     st.warning("Generate a passage first to evaluate answers or reveal correct answers.")
