@@ -67,7 +67,7 @@ if 'generated_output' in st.session_state:
             st.warning("Generate a passage first.")
         time.sleep(5)
 
-    if st.button("Reveal Explaination", key="reveal_explaination_button"):
+    if st.button("Reveal Explanation", key="reveal_explaination_button"):
         st.markdown("### 📌Explaination")
     
         for i, line in enumerate(st.session_state.generated_output.split("\n")):
@@ -75,8 +75,10 @@ if 'generated_output' in st.session_state:
                 st.write(f"Q{i+1}: {line.split(':')[1].strip()}")
         else:
             st.warning("Generate a passage first.")
-        exit()
+        st.stop()
 
-   
+
 else:
     st.warning("Generate a passage first to evaluate answers or reveal correct answers.")
+
+st.stop()
