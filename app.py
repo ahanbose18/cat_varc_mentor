@@ -68,7 +68,7 @@ if 'generated_output' in st.session_state:
         time.sleep(5)
 
     if st.button("Reveal Explanation", key="reveal_explaination_button"):
-        st.markdown("### 📌Explaination")
+        st.markdown("### 📌Explanation")
     
         for i, line in enumerate(st.session_state.generated_output.split("\n")):
             if line.strip().startswith("Explanation:"):
