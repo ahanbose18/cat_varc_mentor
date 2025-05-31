@@ -3,10 +3,11 @@ from rc_generator import generate_rc_passage
 from evaluator import evaluate_user_answers
 from datetime import datetime
 import time
-
+import html
 
 st.title("AI-Powered Reading Comprehension Passage Generator")
 st.subheader("Generate CAT-style RC Passages with Questions")
+
 # Google Form URL
 form_url = "https://docs.google.com/forms/d/e/1FAIpQLSd893LWEpBFtkHun6m19U2djFrkUM-N0CkIGh-pcghHgE4ZbA/viewform?usp=sharing&ouid=113708083278017820025"
 
@@ -40,9 +41,22 @@ if st.button("Generate RC", key="generate_rc_button"):
 
 if 'generated_output' in st.session_state:
 
-    st.text_area("RC Passage + Questions", st.session_state.visible_output, height=500)
-
+    #st.text_area("RC Passage + Questions", st.session_state.visible_output)
+    #st.code(st.session_state.visible_output, language="text")
     #Keeps track of the timer
+    # Escape HTML-sensitive characters and preserve line breaks
+    escaped_output = html.escape(st.session_state.visible_output)
+    
+
+    st.markdown(f"""
+    <div style="border:1px solid #ccc; padding:10px; border-radius:5px; border-color:#FF9898;
+                height:300px; overflow:auto; background-color:#f9f9f9;
+                white-space:pre-wrap; font-family:monospace;">
+    {escaped_output}
+    </div>
+    """, unsafe_allow_html=True)
+
+
     if 'start_time' in st.session_state and st.session_state.get('timer_running', False):
         elapsed = datetime.now() - st.session_state.start_time
         minutes, seconds = divmod(elapsed.total_seconds(), 60)
